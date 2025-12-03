@@ -20,68 +20,6 @@ app.get('/', (req: Request, res: Response) => {
 
 // users CURD
 app.use('/users', userRouters);
-// app.post('/users', async (req: Request, res: Response) => {
-//     const { name, email } = req.body;
-//     try {
-//         const result = await pool.query(`INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *`,
-//             [name, email]
-//         )
-//         res.status(201).json({
-//             success: true,
-//             message: 'Data received successfully',
-//             data: result.rows[0]
-//         })
-//     } catch (error: any) {
-//         console.error('Error inserting user:', error.message);
-//         return res.status(500).json({ success: false, message: error.message });
-//     }
-// })
-
-// getting all users
-
-app.use('/users', userRouters)
-// app.get('/users', async (req: Request, res: Response) => {
-//     try {
-//         const result = await pool.query('SELECT * FROM users')
-//         res.status(200).json({
-//             success: true,
-//             data: result.rows
-//         })
-//     } catch (error: any) {
-//         res.status(500).json({
-//             success: false,
-//             message: error.message,
-//             details: error
-//         })
-//     }
-// })
-
-// getting single user
-
-app.get('/users/:id', async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
-        if (result.rows.length === 0) {
-            res.status(404).json({
-                success: false,
-                message: 'User not found'
-            })
-        }
-        else {
-            res.status(200).json({
-                success: true,
-                data: result.rows[0]
-            })
-        }
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-            details: error
-        })
-    }
-})
 
 // Update single user
 app.put('/users/:id', async (req: Request, res: Response) => {
