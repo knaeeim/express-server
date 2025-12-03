@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import config from './config';
 import initDB, { pool } from './config/db';
 import { userRouters } from './modules/user/user.routes';
+import { userControllers } from './modules/user/user.controller';
 
 const app = express()
 const port = config.port
@@ -15,23 +16,6 @@ initDB();
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello Next Level Developer')
-})
-
-app.get('/users', async( req: Request, res: Response) => {
-    try {
-        const result = await pool.query('SELECT * FROM users');
-        res.status(200).json({
-            success : true,
-            message : "Users fetched successfully",
-            data : result.rows
-        })
-    } catch (error : any) {
-        res.status(500).json({
-            success : false, 
-            message : error.message, 
-            details : error
-        })
-    }
 })
 
 // users CURD
@@ -54,21 +38,23 @@ app.use('/users', userRouters);
 // })
 
 // getting all users
-app.get('/users', async (req: Request, res: Response) => {
-    try {
-        const result = await pool.query('SELECT * FROM users')
-        res.status(200).json({
-            success: true,
-            data: result.rows
-        })
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-            details: error
-        })
-    }
-})
+
+app.use('/users', userRouters)
+// app.get('/users', async (req: Request, res: Response) => {
+//     try {
+//         const result = await pool.query('SELECT * FROM users')
+//         res.status(200).json({
+//             success: true,
+//             data: result.rows
+//         })
+//     } catch (error: any) {
+//         res.status(500).json({
+//             success: false,
+//             message: error.message,
+//             details: error
+//         })
+//     }
+// })
 
 // getting single user
 

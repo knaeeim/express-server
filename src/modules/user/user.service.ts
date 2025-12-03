@@ -7,6 +7,12 @@ const createUser = async (name : string, email : string ) => {
     return result; 
 }
 
+const getUsers = async () => {
+    const result = await pool.query('SELECT * FROM users'); 
+    return result;
+}
+
 export const userServices = {
-    createUser
+    createUser, 
+    getUsers,
 }
