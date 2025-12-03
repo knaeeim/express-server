@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import config from './config';
 import initDB, { pool } from './config/db';
+import { userRouters } from './modules/user/user.routes';
 
 const app = express()
 const port = config.port
@@ -16,23 +17,41 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Hello Next Level Developer')
 })
 
-// users CURD
-app.post('/users', async (req: Request, res: Response) => {
-    const { name, email } = req.body;
+app.get('/users', async( req: Request, res: Response) => {
     try {
-        const result = await pool.query(`INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *`,
-            [name, email]
-        )
-        res.status(201).json({
-            success: true,
-            message: 'Data received successfully',
-            data: result.rows[0]
+        const result = await pool.query('SELECT * FROM users');
+        res.status(200).json({
+            success : true,
+            message : "Users fetched successfully",
+            data : result.rows
         })
-    } catch (error: any) {
-        console.error('Error inserting user:', error.message);
-        return res.status(500).json({ success: false, message: error.message });
+    } catch (error : any) {
+        res.status(500).json({
+            success : false, 
+            message : error.message, 
+            details : error
+        })
     }
 })
+
+// users CURD
+app.use('/users', userRouters);
+// app.post('/users', async (req: Request, res: Response) => {
+//     const { name, email } = req.body;
+//     try {
+//         const result = await pool.query(`INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *`,
+//             [name, email]
+//         )
+//         res.status(201).json({
+//             success: true,
+//             message: 'Data received successfully',
+//             data: result.rows[0]
+//         })
+//     } catch (error: any) {
+//         console.error('Error inserting user:', error.message);
+//         return res.status(500).json({ success: false, message: error.message });
+//     }
+// })
 
 // getting all users
 app.get('/users', async (req: Request, res: Response) => {
@@ -52,6 +71,7 @@ app.get('/users', async (req: Request, res: Response) => {
 })
 
 // getting single user
+
 app.get('/users/:id', async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
