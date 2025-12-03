@@ -2,7 +2,6 @@ import express, { Request, Response } from 'express'
 import config from './config';
 import initDB, { pool } from './config/db';
 import { userRouters } from './modules/user/user.routes';
-import { userControllers } from './modules/user/user.controller';
 
 const app = express()
 const port = config.port
@@ -20,34 +19,6 @@ app.get('/', (req: Request, res: Response) => {
 
 // users CURD
 app.use('/users', userRouters);
-
-// Update single user
-app.put('/users/:id', async (req: Request, res: Response) => {
-    try {
-        const { name, email } = req.body;
-        const { id } = req.params;
-        const result = await pool.query('UPDATE users SET name=$1, email=$2 WHERE id = $3 RETURNING *', [name, email, id]);
-
-        if (result.rows.length === 0) {
-            res.status(404).json({
-                success: false,
-                message: 'User not found'
-            })
-        }
-        else {
-            res.status(200).json({
-                success: true,
-                data: result.rows[0]
-            })
-        }
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-            details: error
-        })
-    }
-})
 
 // Delete single user
 app.delete('/users/:id', async (req: Request, res: Response) => {

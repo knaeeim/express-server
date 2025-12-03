@@ -17,8 +17,14 @@ const getSingleUser = async (id: string) => {
     return result;
 }
 
+const updateUser = async (id: string, name: string, email: string) => {
+    const result = await pool.query('UPDATE users SET name=$1, email=$2 WHERE id = $3 RETURNING *', [name, email, id]);
+    return result;
+}
+
 export const userServices = {
     createUser, 
     getUsers,
-    getSingleUser
+    getSingleUser, 
+    updateUser,
 }
