@@ -12,40 +12,11 @@ app.use(express.json());
 // initialize database
 initDB();
 
-
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello Next Level Developer')
-})
-
 // users CURD
 app.use('/users', userRouters);
 
 // Delete single user
-app.delete('/users/:id', async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const result = await pool.query('DELETE FROM users WHERE id = $1', [id]);
-        if (result.rowCount === 0) {
-            res.status(404).json({
-                success: false,
-                message: 'User not found'
-            })
-        }
-        else {
-            res.status(200).json({
-                success: true,
-                message: 'User deleted successfully',
-                data: null
-            })
-        }
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-            details: error
-        })
-    }
-})
+app.delete('/users/:id', )
 
 
 app.get("/todos", async (req: Request, res: Response) => {
