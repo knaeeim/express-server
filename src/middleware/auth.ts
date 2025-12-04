@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 import config from "../config";
 
 
-const auth = () => {
+const auth = (...role: string[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             const token = req.headers.authorization;
@@ -18,6 +18,12 @@ const auth = () => {
             const decode = jwt.verify(token as string, config.secret_key as string) as JwtPayload;
             console.log({ decoded: decode });
             req.user = decode;
+
+            if (role.length && !role.includes(decode.role as string)) {
+                return res.status(500).json({
+                    error: 'Unauthorized Access'
+                });
+            }
             next();
 
         } catch (error: any) {
