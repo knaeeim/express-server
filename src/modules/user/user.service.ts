@@ -1,14 +1,16 @@
 import { pool } from "../../config/db";
+import bcrypt from 'bcryptjs'
 
-const createUser = async (name : string, email : string ) => {
-    const result = await pool.query(`INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *`,
-            [name, email]
-        )
-    return result; 
+
+const createUser = async (payload: Record<string, unknown>) => {
+    const { name, email, password, role } = payload;
+    const hashedPassword = await bcrypt.hash(password as string, 10);
+    const result = await pool.query(`INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING *`, [name, email, hashedPassword, role])
+    return result;
 }
 
 const getUsers = async () => {
-    const result = await pool.query('SELECT * FROM users'); 
+    const result = await pool.query('SELECT * FROM users');
     return result;
 }
 
@@ -28,9 +30,9 @@ const deleteUser = async (id: string) => {
 }
 
 export const userServices = {
-    createUser, 
+    createUser,
     getUsers,
-    getSingleUser, 
+    getSingleUser,
     updateUser,
     deleteUser
 }

@@ -1,13 +1,14 @@
 import { Request, Response, Router } from "express";
 import { pool } from "../../config/db";
 import { userControllers } from "./user.controller";
+import auth from "../../middleware/auth";
 
 
 const router = Router(); 
 
 router.post('/', userControllers.createUser);
 
-router.get('/', userControllers.getUsers);
+router.get('/', auth(), userControllers.getUsers);
 
 router.get('/:id', userControllers.getSingleUser);
 

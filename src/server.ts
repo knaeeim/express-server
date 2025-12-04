@@ -3,6 +3,7 @@ import config from './config';
 import initDB, { pool } from './config/db';
 import { userRouters } from './modules/user/user.routes';
 import { todoRouters } from './modules/todo/todo.routes';
+import { authRouters } from './modules/auth/auth.routes';
 
 const app = express()
 const port = config.port
@@ -17,6 +18,8 @@ initDB();
 app.use('/users', userRouters);
 
 app.use('/todos', todoRouters);
+
+app.use('/auth', authRouters);
 
 app.use((req: Request, res: Response) => {
     res.status(404).json({

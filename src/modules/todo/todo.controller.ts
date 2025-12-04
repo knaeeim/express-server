@@ -71,8 +71,8 @@ const deleteTodo = async (req: Request, res: Response) => {
 
 const createTodo = async (req: Request, res: Response) => {
     try {
-        const { user_id, title, descripiton } = req.body;
-        const result = await todoServices.createTodo(user_id, title, descripiton);
+        const { user_id, title, description } = req.body;
+        const result = await todoServices.createTodo(user_id, title, description);
         res.status(201).json({
             success: true,
             message: 'Data received successfully',

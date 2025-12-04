@@ -11,7 +11,9 @@ const initDB = async () => {
         `CREATE TABLE IF NOT EXISTS users(
             id SERIAL PRIMARY KEY, 
             name VARCHAR(100) NOT NULL, 
+            role VARCHAR(50) NOT NULL,
             email VARCHAR(150) UNIQUE NOT NULL,
+            password TEXT NOT NULL,
             age INT, 
             phone VARCHAR(15), 
             address TEXT, 
@@ -25,7 +27,7 @@ const initDB = async () => {
                 id SERIAL PRIMARY KEY, 
                 user_id INT REFERENCES users(id) ON DELETE CASCADE, 
                 title VARCHAR(200) NOT NULL, 
-                descripiton TEXT, 
+                description TEXT, 
                 completed BOOLEAN DEFAULT FALSE, 
                 due_date DATE, 
                 created_at TIMESTAMP DEFAULT NOW(), 
