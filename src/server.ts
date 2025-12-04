@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import config from './config';
 import initDB, { pool } from './config/db';
 import { userRouters } from './modules/user/user.routes';
+import { todoRouters } from './modules/todo/todo.routes';
 
 const app = express()
 const port = config.port
@@ -15,51 +16,8 @@ initDB();
 // users CURD
 app.use('/users', userRouters);
 
-// Delete single user
-app.delete('/users/:id', )
+app.use("/todos", todoRouters);
 
-
-app.get("/todos", async (req: Request, res: Response) => {
-    try {
-        const result = await pool.query('SELECT * FROM todos');
-        res.status(200).json({
-            success: true,
-            data: result.rows
-        })
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-            details: error
-        })
-    }
-})
-
-// get single todo
-app.get('/todos/:id', async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const result = await pool.query('SELECT * FROM todos WHERE id =$1', [id]);
-        if (result.rows.length === 0) {
-            res.status(404).json({
-                success: false,
-                message: 'Todo not found'
-            })
-        }
-        else {
-            res.status(200).json({
-                success: true,
-                data: result.rows[0]
-            })
-        }
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-            details: error
-        })
-    }
-})
 
 app.delete('/todos/:id', async (req: Request, res: Response) => {
     try {
